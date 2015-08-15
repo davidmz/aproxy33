@@ -1,0 +1,60 @@
+{
+	"//": "Listen address & port",
+	"Listen": "localhost:8356",
+	
+	"//": "Database connection url",
+	"DBUrl": "postgres://user:pass@localhost:5432/base?sslmode=disable",
+
+	"//": "Database table prefix (inserts in sql without escaping)",
+	"DBTablePrefix": "aproxy33.",
+
+	"//": "FreeFeed API root",
+	"BackendAPIRoot": "https://freefeed.net",
+
+	"//": "FreeFeed API methods available for apps",
+	"//": "DO NOT include session and passwords API to this list",
+	"BackendAPIMethods": {
+		"POST /v1/users": "Create new users",
+		"POST /v1/users/acceptRequest/*": "Accept subscription requests",
+		"POST /v1/users/rejectRequest/*": "Reject subscription requests",
+		"POST /v1/users/*/unsubscribeFromMe": "Unsubscribe users from me",
+		"POST /v1/users/*/sendRequest": "Send subscription requests",
+		"GET /v1/users/whoami": "Get information about own account",
+		"GET /v1/users/*": "Get information about user accounts",
+		"POST /v1/users/updateProfilePicture": "Update own profile picture",
+		"PUT /v1/users/*": "Update users|groups information",
+		"POST /v1/users/*/ban": "Ban users",
+		"POST /v1/users/*/unban": "Unban users",
+		"POST /v1/users/*/subscribe": "Subscribe to users",
+		"POST /v1/users/*/unsubscribe": "Unsubscribe from users",
+		"GET /v1/users/*/subscribers": "Get users subscribers",
+		"GET /v1/users/*/subscriptions": "Get users subscriptions",
+
+		"GET /v1/timelines/home": "View own home timeline",
+		"GET /v1/timelines/filter/discussions": "View own discussions timeline",
+		"GET /v1/timelines/filter/directs": "View own directs timeline",
+		"GET /v1/timelines/*": "View users timeline",
+		"GET /v1/timelines/*/likes": "View users likes timeline",
+		"GET /v1/timelines/*/comments": "View users comments timeline",
+
+		"POST /v1/posts": "Create posts",
+		"GET /v1/posts/*": "View posts",
+		"PUT /v1/posts/*": "Edit posts",
+		"DELETE /v1/posts/*": "Delete posts",
+		"POST /v1/posts/*/like": "Like posts",
+		"POST /v1/posts/*/unlike": "Unlike posts",
+		"POST /v1/posts/*/hide": "Hide posts",
+		"POST /v1/posts/*/unhide": "Unhide posts",
+
+		"POST /v1/groups": "Create groups",
+		"POST /v1/groups/*/updateProfilePicture": "Update group profile picture",
+		"POST /v1/groups/*/subscribers/*/admin": "Set admin for groups",
+		"POST /v1/groups/*/subscribers/*/unadmin": "Unset admin for groups",
+
+		"POST /v1/comments": "Create comments",
+		"PUT /v1/comments/*": "Edit comments",
+		"DELETE /v1/comments/*": "Delete comments",
+
+		"POST /v1/attachments": "Create attachments"
+	}
+}
