@@ -70,13 +70,23 @@ func (r *Reg) run() {
 		for {
 			time.Sleep(r.vacuumInterval)
 			cutTime := time.Now().Add(-r.ItemTTL)
-			r.mutex.Lock()
+			var toClean []string
+
+			r.mutex.RLock()
 			for t, it := range r.items {
 				if it.Created.Before(cutTime) {
-					delete(r.items, t)
+					toClean = append(toClean, t)
 				}
 			}
-			r.mutex.Unlock()
+			r.mutex.RUnlock()
+
+			if toClean != nil {
+				r.mutex.Lock()
+				for _, t := range toClean {
+					delete(r.items, t)
+				}
+				r.mutex.Unlock()
+			}
 		}
 	}()
 
