@@ -72,7 +72,7 @@ func (a *App) AppsNew(r *http.Request) (int, interface{}) {
 	oa.Key = fmt.Sprintf("%x", b[:10])
 	oa.Secret = fmt.Sprintf("%x", b[30:])
 
-	mustBeOKVal(a.DB.Query(
+	mustBeOKVal(a.DB.Exec(
 		"insert into "+a.DBTablePrefix+"apps (key, secret, title, description, domains, user_id) values ($1, $2, $3, $4, $5, $6)",
 		oa.Key, oa.Secret, oa.Title, oa.Description, oa.Domains, userID,
 	))
@@ -109,7 +109,7 @@ func (a *App) AppsUpdate(r *http.Request) (int, interface{}) {
 		return http.StatusBadRequest, "Required fields: title, description, domains"
 	}
 
-	mustBeOKVal(a.DB.Query(
+	mustBeOKVal(a.DB.Exec(
 		"update "+a.DBTablePrefix+"apps set title = $1, description = $2, domains = $3 where id = $4",
 		oa.Title, oa.Description, oa.Domains, appID,
 	))

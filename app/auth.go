@@ -51,7 +51,7 @@ func (app *App) AuthInit(r *http.Request) (int, interface{}) {
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		// запись не найдена
 		// вставляем запись, ошибки не проверяем!
-		app.DB.Query("insert into "+app.DBTablePrefix+"users set (username, ff_token) values ($1, $2)", username, authToken)
+		app.DB.Exec("insert into "+app.DBTablePrefix+"users set (username, ff_token) values ($1, $2)", username, authToken)
 		// и снова достаём id
 		mustBeOK(app.DB.QueryRow("select id from "+app.DBTablePrefix+"users where username = $1", username).Scan(&userID))
 	}

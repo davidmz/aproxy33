@@ -81,7 +81,7 @@ func (a *App) OAuthToken(w http.ResponseWriter, r *http.Request) {
 
 	// Сохраняем
 
-	mustBeOKVal(a.DB.Query(
+	mustBeOKVal(a.DB.Exec(
 		"insert into "+a.DBTablePrefix+"atokens (app_id, user_id, token, perms) values ($1, $2, $3, $4)",
 		codeInfo.AppID, codeInfo.UserID, accessToken, codeInfo.Perms,
 	))
