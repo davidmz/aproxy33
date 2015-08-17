@@ -32,8 +32,8 @@ func (a *App) ProxyBackend(w http.ResponseWriter, r *http.Request) {
 
 		err := a.DB.QueryRow(
 			`select t.perms, u.ff_token from 
-				`+a.DBTablePrefix+`atokens t
-				join `+a.DBTablePrefix+`users u on u.id = t.user_id
+				atokens t 
+				join users u on u.id = t.user_id
 			where t.token = $1`,
 			auh[1],
 		).Scan(&perms, &frfToken)

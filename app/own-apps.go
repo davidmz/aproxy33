@@ -28,7 +28,7 @@ func (a *App) AppsList(r *http.Request) (int, interface{}) {
 	userID := context.Get(r, "UserID").(int)
 
 	rows := mustBeOKVal(a.DB.Query(
-		"select key, secret, date, title, description, domains from "+a.DBTablePrefix+"apps where user_id = $1 order by date desc",
+		"select key, secret, date, title, description, domains from apps where user_id = $1 order by date desc",
 		userID,
 	)).(*sql.Rows)
 
@@ -73,7 +73,7 @@ func (a *App) AppsNew(r *http.Request) (int, interface{}) {
 	oa.Secret = fmt.Sprintf("%x", b[30:])
 
 	mustBeOKVal(a.DB.Exec(
-		"insert into "+a.DBTablePrefix+"apps (key, secret, title, description, domains, user_id) values ($1, $2, $3, $4, $5, $6)",
+		"insert into apps (key, secret, title, description, domains, user_id) values ($1, $2, $3, $4, $5, $6)",
 		oa.Key, oa.Secret, oa.Title, oa.Description, oa.Domains, userID,
 	))
 
@@ -86,7 +86,7 @@ func (a *App) AppsUpdate(r *http.Request) (int, interface{}) {
 	key := mux.Vars(r)["key"]
 
 	appID := 0
-	err := a.DB.QueryRow("select id from "+a.DBTablePrefix+"apps where key = $1 and user_id = $2", key, userID).Scan(&appID)
+	err := a.DB.QueryRow("select id from apps where key = $1 and user_id = $2", key, userID).Scan(&appID)
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		return http.StatusNotFound, "App not found"
 	}
@@ -110,7 +110,7 @@ func (a *App) AppsUpdate(r *http.Request) (int, interface{}) {
 	}
 
 	mustBeOKVal(a.DB.Exec(
-		"update "+a.DBTablePrefix+"apps set title = $1, description = $2, domains = $3 where id = $4",
+		"update apps set title = $1, description = $2, domains = $3 where id = $4",
 		oa.Title, oa.Description, oa.Domains, appID,
 	))
 
@@ -122,7 +122,7 @@ func (a *App) AppsDelete(r *http.Request) (int, interface{}) {
 	userID := context.Get(r, "UserID").(int)
 	key := mux.Vars(r)["key"]
 
-	err := a.DB.QueryRow("delete from "+a.DBTablePrefix+"apps where key = $1 and user_id = $2 returning id", key, userID).Scan()
+	err := a.DB.QueryRow("delete from apps where key = $1 and user_id = $2 returning id", key, userID).Scan()
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		return http.StatusNotFound, "App not found"
 	}
@@ -135,7 +135,7 @@ func (a *App) AppsInfo(r *http.Request) (int, interface{}) {
 	key := mux.Vars(r)["key"]
 	oa := &OwnApp{}
 	err := a.DB.
-		QueryRow("select key, date, title, description, domains from "+a.DBTablePrefix+"apps where key = $1", key).
+		QueryRow("select key, date, title, description, domains from apps where key = $1", key).
 		Scan(&oa.Key, &oa.Date, &oa.Title, &oa.Description, &oa.Domains)
 
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {

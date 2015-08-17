@@ -2,11 +2,8 @@
 	"//": "Listen address & port",
 	"Listen": "localhost:8356",
 	
-	"//": "Database connection url",
-	"DBUrl": "postgres://user:pass@localhost:5432/base?sslmode=disable",
-
-	"//": "Database table prefix (inserts in sql without escaping)",
-	"DBTablePrefix": "aproxy33.",
+	"//": "Database connection string",
+	"DBUrl": "user=user password=password host=localhost dbname=base sslmode=disable",
 
 	"//": "FreeFeed API root",
 	"BackendAPIRoot": "https://freefeed.net",

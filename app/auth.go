@@ -47,13 +47,13 @@ func (app *App) AuthInit(r *http.Request) (int, interface{}) {
 
 	// пролучаем наш user id
 	var userID int
-	err = app.DB.QueryRow("select id from "+app.DBTablePrefix+"users where username = $1", username).Scan(&userID)
+	err = app.DB.QueryRow("select id from users where username = $1", username).Scan(&userID)
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		// запись не найдена
 		// вставляем запись, ошибки не проверяем!
-		app.DB.Exec("insert into "+app.DBTablePrefix+"users set (username, ff_token) values ($1, $2)", username, authToken)
+		app.DB.Exec("insert into users set (username, ff_token) values ($1, $2)", username, authToken)
 		// и снова достаём id
-		mustBeOK(app.DB.QueryRow("select id from "+app.DBTablePrefix+"users where username = $1", username).Scan(&userID))
+		mustBeOK(app.DB.QueryRow("select id from users where username = $1", username).Scan(&userID))
 	}
 
 	return http.StatusOK, H{"token": app.LocalAuthTokens.Add(userID), "ttl": app.LocalAuthTokens.ItemTTL.Seconds()}

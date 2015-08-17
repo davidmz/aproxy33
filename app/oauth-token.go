@@ -62,7 +62,7 @@ func (a *App) OAuthToken(w http.ResponseWriter, r *http.Request) {
 
 	var appKey, appSecret string
 
-	err := a.DB.QueryRow("select key, secret from "+a.DBTablePrefix+"apps where id = $1", codeInfo.AppID).Scan(&appKey, &appSecret)
+	err := a.DB.QueryRow("select key, secret from apps where id = $1", codeInfo.AppID).Scan(&appKey, &appSecret)
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		oAuthError(H{"error": "invalid_request", "error_description": "App not found"}, w)
 		return
@@ -82,13 +82,13 @@ func (a *App) OAuthToken(w http.ResponseWriter, r *http.Request) {
 	// Сохраняем
 
 	mustBeOKVal(a.DB.Exec(
-		"insert into "+a.DBTablePrefix+"atokens (app_id, user_id, token, perms) values ($1, $2, $3, $4)",
+		"insert into atokens (app_id, user_id, token, perms) values ($1, $2, $3, $4)",
 		codeInfo.AppID, codeInfo.UserID, accessToken, codeInfo.Perms,
 	))
 
 	// для удобства сразу выдаём username
 	username := ""
-	mustBeOK(a.DB.QueryRow("select username from "+a.DBTablePrefix+"users where id = $1", codeInfo.UserID).Scan(&username))
+	mustBeOK(a.DB.QueryRow("select username from users where id = $1", codeInfo.UserID).Scan(&username))
 
 	a.OAuthCodes.Del(fields["code"])
 

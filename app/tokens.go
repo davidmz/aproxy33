@@ -31,9 +31,9 @@ func (a *App) TokensList(r *http.Request) (int, interface{}) {
 		`select 
 			t.id, t.date, t.perms, a.title, a.description, a.domains, u.username 
 		from 
-			`+a.DBTablePrefix+`atokens t 
-			join `+a.DBTablePrefix+`apps a on a.id = t.app_id
-			join `+a.DBTablePrefix+`users a on u.id = t.user_id
+			atokens t 
+			join apps a on a.id = t.app_id
+			join users a on u.id = t.user_id
 		where t.user_id = $1 order by t.date desc`,
 		userID,
 	)).(*sql.Rows)
@@ -59,7 +59,7 @@ func (a *App) TokensDelete(r *http.Request) (int, interface{}) {
 	userID := context.Get(r, "UserID").(int)
 	id := mustBeOKVal(strconv.Atoi(mux.Vars(r)["id"])).(int)
 
-	err := a.DB.QueryRow("delete from "+a.DBTablePrefix+"atokens where id = $1 and user_id = $2 returning id", id, userID).Scan()
+	err := a.DB.QueryRow("delete from atokens where id = $1 and user_id = $2 returning id", id, userID).Scan()
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		return http.StatusNotFound, "Token not found"
 	}

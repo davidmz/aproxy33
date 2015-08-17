@@ -16,7 +16,6 @@ type Conf struct {
 	Listen            string
 	Secret            []byte
 	DBUrl             string
-	DBTablePrefix     string
 	BackendAPIRoot    string
 	BackendAPIMethods map[string]string
 }

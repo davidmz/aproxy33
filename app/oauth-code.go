@@ -37,7 +37,7 @@ func (a *App) OAuthNewCode(r *http.Request) (int, interface{}) {
 	var domains sqlt.StringSlice
 
 	// есть ли такое приложение?
-	err := a.DB.QueryRow("select id, domains from "+a.DBTablePrefix+"apps where key = $1", reqData.AppKey).Scan(&ci.AppID, &domains)
+	err := a.DB.QueryRow("select id, domains from apps where key = $1", reqData.AppKey).Scan(&ci.AppID, &domains)
 	if mustBeOKOr(err, sql.ErrNoRows) != nil {
 		return http.StatusNotFound, "App not found"
 	}
