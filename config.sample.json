@@ -5,6 +5,9 @@
 	"//": "Database connection string",
 	"DBUrl": "user=user password=password host=localhost dbname=base sslmode=disable",
 
+	"//": "CORS origins",
+	"CORSOrigins": ["http://localhost:63342"],
+
 	"//": "FreeFeed API root",
 	"BackendAPIRoot": "https://freefeed.net",
 

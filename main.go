@@ -11,6 +11,7 @@ import (
 	"github.com/davidmz/aproxy33/app"
 	"github.com/gorilla/handlers"
 	"github.com/justinas/alice"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -30,9 +31,16 @@ func main() {
 
 	app.InitRouter()
 
+	crs := cors.New(cors.Options{
+		AllowedOrigins:   app.CORSOrigins,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowCredentials: true,
+	})
+
 	h := alice.New(
 		LoggingHandler(os.Stdout),
 		// app.CatchPanics,
+		crs.Handler,
 	).Then(app.Router)
 
 	s := &http.Server{
