@@ -81,7 +81,7 @@ func (a *App) LocalAuthRequired(h ApiHandler) ApiHandler {
 
 		vUserID, found := a.LocalAuthTokens.Get(auh[1])
 		if !found {
-			return http.StatusUnauthorized, "Not authorized"
+			return http.StatusForbidden, "Not authorized"
 		}
 
 		context.Set(r, "UserID", vUserID)

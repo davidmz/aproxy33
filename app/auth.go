@@ -33,17 +33,17 @@ func (app *App) AuthInit(r *http.Request) (int, interface{}) {
 	mustBeOK(json.NewDecoder(ffResp.Body).Decode(&m))
 
 	s := &struct {
-		Users []struct {
+		Users *struct {
 			Username string `json:"username"`
 		} `json:"users"`
 		AuthToken string `json:"authToken"`
 	}{}
 	mustBeOK(json.Unmarshal(m, s))
-	if len(s.Users) == 0 {
-		return http.StatusUnauthorized, "Can not authorize"
+	if s.Users == nil {
+		return http.StatusForbidden, "Authorization failed on backend"
 	}
 
-	username, authToken := s.Users[0].Username, s.AuthToken
+	username, authToken := s.Users.Username, s.AuthToken
 
 	// пролучаем наш user id
 	var userID int
