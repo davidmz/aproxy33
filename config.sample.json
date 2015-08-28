@@ -2,6 +2,9 @@
 	"//": "Listen address & port",
 	"Listen": "localhost:8356",
 	
+	"//": "Log level: panic, fatal, error, info, debug ",
+	"LogLevel": "error",
+	
 	"//": "Database connection string",
 	"DBUrl": "user=user password=password host=localhost dbname=base sslmode=disable",
 

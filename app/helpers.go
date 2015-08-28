@@ -2,9 +2,12 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"runtime"
 	"strings"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/gorilla/context"
 )
 
@@ -51,6 +54,11 @@ func (a *App) ApiCall(ah ApiHandler) http.HandlerFunc {
 				// handle panics
 				if rec := recover(); rec != nil {
 					a.Log.WithField("panic", rec).Error("panic happens")
+					if a.Log.Level >= logrus.DebugLevel {
+						buf := make([]byte, 1024)
+						n := runtime.Stack(buf, false)
+						a.Log.WithField("stack", string(buf[:n])).Debug("panic happens")
+					}
 					httpCode, result = http.StatusInternalServerError, "Internal error"
 				}
 			}()
@@ -87,4 +95,33 @@ func (a *App) LocalAuthRequired(h ApiHandler) ApiHandler {
 		context.Set(r, "UserID", vUserID)
 		return h(r)
 	}
+}
+
+// https://gist.github.com/swdunlop/9629168
+func identifyPanic() string {
+	var name, file string
+	var line int
+	var pc [16]uintptr
+
+	n := runtime.Callers(3, pc[:])
+	for _, pc := range pc[:n] {
+		fn := runtime.FuncForPC(pc)
+		if fn == nil {
+			continue
+		}
+		file, line = fn.FileLine(pc)
+		name = fn.Name()
+		if !strings.HasPrefix(name, "runtime.") {
+			break
+		}
+	}
+
+	switch {
+	case name != "":
+		return fmt.Sprintf("%v:%v", name, line)
+	case file != "":
+		return fmt.Sprintf("%v:%v", file, line)
+	}
+
+	return fmt.Sprintf("pc:%x", pc)
 }

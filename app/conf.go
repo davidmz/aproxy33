@@ -16,6 +16,7 @@ type Conf struct {
 	Listen            string
 	Secret            []byte
 	DBUrl             string
+	LogLevel          string
 	CORSOrigins       []string
 	BackendAPIRoot    string
 	BackendAPIMethods map[string]string
@@ -48,6 +49,10 @@ func (a *App) LoadConfig(file string) error {
 	a.Log = logrus.New()
 	a.Log.Out = os.Stderr
 	a.Log.Formatter = &logrus.TextFormatter{ForceColors: true}
+	a.Log.Level = logrus.ErrorLevel
+	if ll, err := logrus.ParseLevel(a.LogLevel); err == nil {
+		a.Log.Level = ll
+	}
 
 	a.LocalAuthTokens = codereg.New(20, 5*time.Minute, time.Minute)
 	a.OAuthCodes = codereg.New(20, 10*time.Minute, time.Minute)
