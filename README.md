@@ -36,6 +36,7 @@
 	Response:
 	{
 		"token": "…",
+		"username": "…",
 		"ttl": 12345
 	}
 
@@ -49,6 +50,7 @@
 	Response:
 	{
 		"token": "…",
+		"username": "…",
 		"ttl": 12345
 	}
 

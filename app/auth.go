@@ -56,12 +56,22 @@ func (app *App) AuthInit(r *http.Request) (int, interface{}) {
 		mustBeOK(app.DB.QueryRow("select id from users where username = $1", username).Scan(&userID))
 	}
 
-	return http.StatusOK, H{"token": app.LocalAuthTokens.Add(userID), "ttl": app.LocalAuthTokens.ItemTTL.Seconds()}
+	return http.StatusOK, H{
+		"token":    app.LocalAuthTokens.Add(userID),
+		"username": username,
+		"ttl":      app.LocalAuthTokens.ItemTTL.Seconds(),
+	}
 }
 
 // Обновление авторизации
 // Ничего не получаем, ориентируемся на заголовок, отдаём новый token
 func (app *App) AuthRefresh(r *http.Request) (int, interface{}) {
 	userID := context.Get(r, "UserID").(int)
-	return http.StatusOK, H{"token": app.LocalAuthTokens.Add(userID), "ttl": app.LocalAuthTokens.ItemTTL.Seconds()}
+	var username string
+	mustBeOK(app.DB.QueryRow("select username from users where id = $1", userID).Scan(&username))
+	return http.StatusOK, H{
+		"token":    app.LocalAuthTokens.Add(userID),
+		"username": username,
+		"ttl":      app.LocalAuthTokens.ItemTTL.Seconds(),
+	}
 }

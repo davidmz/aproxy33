@@ -34,6 +34,7 @@ func main() {
 	crs := cors.New(cors.Options{
 		AllowedOrigins:   app.CORSOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"authorization"},
 		AllowCredentials: true,
 	})
 
