@@ -34,8 +34,9 @@ func main() {
 	crs := cors.New(cors.Options{
 		AllowedOrigins:   app.CORSOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-		AllowedHeaders:   []string{"authorization"},
+		AllowedHeaders:   []string{"Authorization"},
 		AllowCredentials: true,
+		MaxAge:           86400,
 	})
 
 	h := alice.New(
